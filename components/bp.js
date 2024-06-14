@@ -1,29 +1,32 @@
 import React from 'react';
 import { Pressable, StyleSheet } from 'react-native';
-
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { ExternalLink } from './ExternalLink';
 import { MonoText } from './StyledText';
 import { Text, View } from './Themed';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+
 import Colors from '@/constants/Colors';
 import { router , Link} from 'expo-router';
 
-export default function EditScreenInfo({ path }: { path: string }) {
+export default function BP() {
   return (
     <View>
-        <Link href="/register" asChild>
+        <Link href="/bpScreen" asChild>
     <Pressable >
 
             <View style={styles.card}
                 // darkColor="black"
                 darkColor="#353935"
-                lightColor="white"            
+                // lightColor="#F8F8FF"    
+                lightColor='white'        
             >
             {/* <ImageBackground source={require("../assets/images/glu.jpg")}   style={styles.image}> */}
 
 
                 <View 
-                style={{margin:1, 
+                style={{margin:1,
+                flexDirection:"row",
+                justifyContent:"space-between", 
                 paddingVertical: 10,
                 marginBottom:10,
                 paddingHorizontal: 0,
@@ -35,14 +38,13 @@ export default function EditScreenInfo({ path }: { path: string }) {
                 <Text style={styles.text}
                     lightColor="rgba(0,0,0,0.8)"
                     darkColor="rgba(255,255,255,0.8)"                 
-                >Life style </Text>
+                >Blood pressure Level </Text>
+
                 </View>
-
-
-        {/* <  Pressable style={styles.pressable} > */}
-        <View style={{flexDirection:"row", justifyContent:"space-between", backgroundColor:"white"}}> 
+            <View style={{flexDirection:"row", justifyContent:"space-between", backgroundColor:"white"}}> 
         <View style={styles.pressable} 
-            lightColor="#fffafa"
+            //  lightColor="rgba(0,0,0,0.8)"
+            lightColor='#fffafa'
             darkColor= "#36454F"  >
             <Text 
             style={styles.text}
@@ -50,20 +52,20 @@ export default function EditScreenInfo({ path }: { path: string }) {
             lightColor="rgba(0,0,0,0.8)"
             darkColor="rgba(255,255,255,0.8)"   
             // darkColor="rgba(0,0,0,0.8)"            
-            >Recomendations</Text>
+            >Enter</Text>
         </View>
-             <FontAwesome
-                    name="male"
+                                                  {/* <FontAwesome
+                    name="bell"
                     size={30}
-                    color={"orange"}
+                    color={"blue"}
                     // style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
+                  /> */}
+        {/* <  Pressable style={styles.pressable} > */}
 
             {/* </Pressable> */}
         {/* </ImageBackground> */}
             </View>
-            </View>
-        
+        </View>
     </Pressable>
       {/* <View style={styles.getStartedContainer}>
 

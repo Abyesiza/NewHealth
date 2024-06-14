@@ -22,7 +22,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.joelaby.NewHealth"
     },
     "web": {
       "bundler": "metro",
@@ -30,10 +31,24 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+            [
+        "expo-calendar",
+        {
+          "calendarPermission": "The app needs to access your calendar."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "d167ad45-6800-4721-8c2f-976688f1fd7c"
+      }
     }
   }
 }

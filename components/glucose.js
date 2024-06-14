@@ -8,10 +8,10 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Colors from '@/constants/Colors';
 import { router , Link} from 'expo-router';
 
-export default function EditScreenInfo({ path }: { path: string }) {
+export default function Glucose() {
   return (
     <View>
-        <Link href="/register" asChild>
+        <Link href="/glucoseScreen" asChild>
     <Pressable >
 
             <View style={styles.card}
@@ -20,7 +20,7 @@ export default function EditScreenInfo({ path }: { path: string }) {
                 lightColor="white"            
             >
             {/* <ImageBackground source={require("../assets/images/glu.jpg")}   style={styles.image}> */}
-
+            {/* <View style={{flexDirection:"row", borderRadius: 10, marginBottom:10}}> */}
 
                 <View 
                 style={{margin:1, 
@@ -30,18 +30,16 @@ export default function EditScreenInfo({ path }: { path: string }) {
                 borderRadius: 10,
                 backgroundColor:"white"}}
                 // darkColor="#353935"
-                // lightColor="#F8F8FF" 
+                // lightColor="#F8F8FF"                  
                 >
                 <Text style={styles.text}
                     lightColor="rgba(0,0,0,0.8)"
                     darkColor="rgba(255,255,255,0.8)"                 
-                >Life style </Text>
+                >Glucose Level </Text>
                 </View>
-
-
-        {/* <  Pressable style={styles.pressable} > */}
-        <View style={{flexDirection:"row", justifyContent:"space-between", backgroundColor:"white"}}> 
-        <View style={styles.pressable} 
+            {/* </View>  */}
+            <View style={{flexDirection:"row", justifyContent:"space-between", backgroundColor: "white"}}> 
+                    <View style={styles.pressable} 
             lightColor="#fffafa"
             darkColor= "#36454F"  >
             <Text 
@@ -50,14 +48,15 @@ export default function EditScreenInfo({ path }: { path: string }) {
             lightColor="rgba(0,0,0,0.8)"
             darkColor="rgba(255,255,255,0.8)"   
             // darkColor="rgba(0,0,0,0.8)"            
-            >Recomendations</Text>
+            >Enter</Text>
         </View>
-             <FontAwesome
-                    name="male"
+                                                  <FontAwesome
+                    name="heart"
                     size={30}
-                    color={"orange"}
+                    color={"#eaff7b"}
                     // style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
                   />
+        {/* <  Pressable style={styles.pressable} > */}
 
             {/* </Pressable> */}
         {/* </ImageBackground> */}
@@ -138,7 +137,7 @@ const styles = StyleSheet.create({
         paddingVertical: 7,
         paddingHorizontal: 10,
         borderRadius: 10,
-            // marginLeft:150,
+
         elevation: 1,
     
     },

@@ -52,6 +52,14 @@ function RootLayoutNav() {
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="appointScreen" options={{ presentation: 'modal', title:"Appointment Reminders"}} />
+        <Stack.Screen name="medicationScreen" options={{ presentation: 'modal', title:"Medication Reminders"}} />
+        <Stack.Screen name="glucoseScreen" options={{ presentation: 'modal' , title:"Glucose level Tracker"}} />
+        <Stack.Screen name="bpScreen" options={{ presentation: 'modal', title:"Blood pressure Tracker" }} />
+        <Stack.Screen name="lstyleScreen" options={{ presentation: 'modal' , title:"Recomendations"}} />
+        <Stack.Screen name="foodScreen" options={{ presentation: 'modal' , title:"Healthy Food"}} />
+        <Stack.Screen name="register" options={{ presentation: 'modal' , title:"Registration"}} />
+
       </Stack>
     </ThemeProvider>
   );
