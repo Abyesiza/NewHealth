@@ -8,9 +8,11 @@ import Reminder from '@/components/reminder';
 import MReminder from '@/components/medicate'
 import { router , Link} from 'expo-router';
 import { Text, View } from '@/components/Themed';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 export default function TabOneScreen() {
   return (
+    <SafeAreaProvider>
     <View style={styles.container}>
     <Link href="/register" asChild>
     <Pressable style={styles.profile}>
@@ -43,6 +45,7 @@ export default function TabOneScreen() {
       <Food  path="app/(tabs)/index.tsx" />
       </ScrollView>
     </View>
+    </SafeAreaProvider>
   );
 }
 
@@ -56,11 +59,14 @@ const styles = StyleSheet.create({
     // justifyContent: 'center',
   },
   title: {
-    fontSize: 25,
+    fontSize: 22,
     fontWeight: 'bold',
     alignItems:"center",
-    justifyContent:"center"
-  },
+    justifyContent:"center",
+    letterSpacing: 0.1,
+    //   color:"black",
+      fontFamily:"sans-serif-condensed",
+  },  
   titleH: {
     paddingLeft:70,
     paddingRight:70,

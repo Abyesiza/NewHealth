@@ -5,7 +5,7 @@ export default {
   light: {
     text: '#000',
     // background: '#fff',
-    background: 'beige',
+    background: '#F8F8F8',
     tint: tintColorLight,
     tabIconDefault: '#ccc',
     tabIconSelected: tintColorLight,

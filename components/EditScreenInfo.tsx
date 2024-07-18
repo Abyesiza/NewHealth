@@ -99,17 +99,24 @@ const styles = StyleSheet.create({
         // backgroundColor:"#36454F",
         // backgroundColor:"#F8F8FF",
         // backgroundColor:"#F8F8FF",
-     elevation: 1,
-        padding:35,
-        borderRadius:20,
-        marginHorizontal: 15,
-        marginBottom: 15,
+        elevation: 3,
+        padding:20,
+        borderRadius:25,
+        marginHorizontal: 9,
+        marginBottom: 9,
+        backgroundColor: 'white',
+        shadowColor: 'white', // Shadow color
+
+        // shadowOffset: { width: 4, height: 4 }, // Shadow offset (x, y)
+        shadowOpacity: 3, // Shadow opacity
+        shadowRadius: 3, // Shadow radius
         
+        // box-shadow: 2px 3px 3px 3px rgba(26, 12, 12, 0.1), 
         },
         button:{
           alignItems: 'center',
           justifyContent: 'center',
-          paddingVertical: 12,
+          paddingVertical: 9,
           paddingHorizontal: 32,
           borderRadius: 10,
           elevation: 1,
@@ -118,13 +125,14 @@ const styles = StyleSheet.create({
           // backgroundColor: 'ne',
         },
           text: {
-          fontSize: 20,
-          lineHeight: 21,
+          fontSize: 17,
+          lineHeight: 19,
           fontWeight: 'bold',
-          letterSpacing: 0.25,
+          letterSpacing: 0.1,
         //   color:"black",
           fontFamily:"sans-serif-condensed",
-        },  image: {
+        }, 
+         image: {
           // flex: 1,
           borderTopLeftRadius: 40,
           justifyContent: 'center',
@@ -136,10 +144,17 @@ const styles = StyleSheet.create({
         justifyContent:"flex-end",
         // backgroundColor:"#FAF9F6",
         paddingVertical: 7,
-        paddingHorizontal: 10,
+        paddingHorizontal: 20,
         borderRadius: 10,
-            // marginLeft:150,
+
         elevation: 1,
+    
+    },
+              pressableI: {
+        alignItems:"center",
+        justifyContent:"flex-end",
+        paddingVertical: 7,
+        paddingHorizontal: 2,
     
     },
   homeScreenFilename: {
