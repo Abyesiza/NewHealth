@@ -34,7 +34,7 @@ export default function TabTwoScreen() {
     // </View>
         <GiftedChat
       messages={messages}
-      messagesContainerStyle={{backgroundColor:"beige"}}
+      messagesContainerStyle={{backgroundColor:'#F8F8F8'}}
       onSend={messages => onSend(messages)}
       user={{
         _id: 1,
@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor:'#F8F8F8'
   },
   title: {
     fontSize: 20,

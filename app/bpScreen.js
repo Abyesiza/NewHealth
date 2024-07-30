@@ -300,7 +300,8 @@ async function registerForPushNotificationsAsync() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop:20
+    paddingTop:20,
+    backgroundColor:'#F8F8F8'
     // alignItems: 'center',
     // justifyContent: 'center',
   },

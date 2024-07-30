@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Pressable, TextInput,ScrollView, Text, View, Platform , Button} from "react-native";
+import {Modal,Alert, StyleSheet, Pressable, TextInput,ScrollView, Text, View, Platform , Button, TouchableOpacity} from "react-native";
 import { useState, useEffect} from "react";
 // import { Text, View } from '@/components/Themed';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -18,24 +18,82 @@ Notifications.setNotificationHandler({
 export default function AppointScreen() {
   const [hospital, setHospital] = useState("")
   const [doctorName, setDoctorName] = useState("")
+  const [Notes, setNotes] = useState("")
+  const [dateValue, setDateValue] = useState("")
+  const [dateEValue, setEDateValue] = useState("")
 
+  const [modalVisible, setModalVisible] = useState(false);
+  const [date, setDate]= useState(new Date())
+  const [Edate, setEDate]= useState(new Date())
 
+  const [showAD, setShowAD] = useState(false);
+  const [showAT, setShowAT] = useState(false);
 
-    const [date, setDate]= useState(new Date())
+  const [EshowAD, setEShowAD] = useState(false);
+  const [EshowAT, setEShowAT] = useState(false);
+  const [mode,setMode] = useState('date');
+  const [Emode,setEMode] = useState('date');
+  const [expoPushToken, setExpoPushToken] = useState('');
 
-    const [showAD, setShowAD] = useState(false);
-    const [showAT, setShowAT] = useState(false);
+  const onAppointSave = async () => {
+    await scheduleAppointmentNotification();
+    const triggerDate = new Date(date.getTime() - 60 * 1000); // 1 minute before appointment
 
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "Don't forget!",
+        body: 'You have an appointment soon!',
+      },
+      trigger: { date: triggerDate },
+    });
 
-    const [mode,setMode] = useState('date');
+    createCalendarEvent();   
+    console.log(hospital)
+    console.log(doctorName)
+    console.log(Notes)
+    console.log(dateValue)
+    console.log(dateEValue)
 
+    setModalVisible(!modalVisible)
+}
+const createCalendarEvent = async () => {
+  const { status } = await Calendar.requestCalendarPermissionsAsync();
+  if (status === 'granted') {
+    const calendars = await Calendar.getCalendarsAsync(Calendar.EntityTypes.EVENT);
+    console.log('Here are all your calendars:');
+    console.log({ calendars });
 
+    const defaultCalendarSource =
+      Platform.OS === 'ios'
+        ? await getDefaultCalendarSource()
+        : { isLocalAccount: true, name: 'Expo Calendar' };
 
-    const [expoPushToken, setExpoPushToken] = useState('');
+    const newCalendarID = await Calendar.createCalendarAsync({
+      title: 'Health app',
+      color: 'yellow',
+      entityType: Calendar.EntityTypes.EVENT,
+      sourceId: defaultCalendarSource.id,
+      source: defaultCalendarSource,
+      name: 'internalCalendarName',
+      ownerAccount: 'personal',
+      accessLevel: Calendar.CalendarAccessLevel.OWNER,
+    });
 
-    const [dateValue, setDateValue] = useState("")
-     
+    await Calendar.createEventAsync(newCalendarID, {
+      title: hospital,
+      startDate: dateValue,
+      endDate:dateEValue,
+      // endDate: new Date(date.getTime() + 60 * 60 * 1000), // 1 hour duration
+      timeZone: 'GMT',
+      notes: 'Annual check-up with Dr. Smith',
+    });
+  }
+};
 
+const getDefaultCalendarSource = async () => {
+  const defaultCalendar = await Calendar.getDefaultCalendarAsync();
+  return defaultCalendar.source;
+};
      useEffect(()=>{
    console.log("registering for push token")
     registerForPushNotificationsAsync().then(token => {
@@ -62,19 +120,21 @@ export default function AppointScreen() {
         console.log(dateValue)
     };
     const onChangeAT = (e, selecteddate) =>{
-        setDate(selecteddate)
+        // setDate(selecteddate)
         setDateValue(selecteddate)
         // setDate(selecteddate)
         setShowAT(false)
         console.log(dateValue)
     };
 
-    const onAppointSave = async () => {
-      await scheduleAppointmentNotification();
-      console.log(hospital)
+  const onEChangeAT = (e, selecteddate) =>{
+
+      setEDateValue(selecteddate)
+      setEShowAT(false)
+      console.log(dateEValue)
+  };
 
 
-    }
 
     const showModeAT = (modeToShow) => {
         setShowAT(true)
@@ -84,93 +144,146 @@ export default function AppointScreen() {
         setShowAD(true)
         setMode(modeToShow)
     }
-
+    const showEModeAT = (modeToShow) => {
+  
+      setEShowAT(true)
+      setEMode(modeToShow)
+  }
 
   return (
     <View style={styles.container}>
-
-      {/* <Button title="Create a new calendar" onPress={createCalendar} /> */}
-<ScrollView>
-        <View style={styles.card}>
-
-        <Pressable style={styles.pressableH} >
-        <Text style={styles.textHeader}>Schedule appointment</Text>
-        </Pressable>   
-
-        </View>
-
-
-
-        <View>
 <View style={styles.card}>
-         <Text style={styles.text}>Hospital name</Text>
-        <TextInput 
-        style={styles.input} 
-        onChangeText={setHospital}
-        value={hospital}
+
+<Pressable style={styles.pressableA} >
+<Text style={styles.textHeader}>Appointments </Text>
+</Pressable>   
+<Text style={styles.textA}>|Grade B, Dr Awum Drake, At 12:30 am to 13:40 am </Text>
+<Text style={styles.textA}>|Kalule, Dr Juwem Owen, At 12:30 am to 13:40 am </Text>
+</View>
+
+<View style={styles.card}>
+
+
+<Pressable style={styles.pressableH} onPress={() => setModalVisible(true)} >
+<Text style={styles.textHeader}>Schedule appointment</Text>
+</Pressable>   
+
+</View>
+<Modal
+        animationType="slide"
+        transparent={false}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Appointment has been set.');
+          setModalVisible(!modalVisible);
+        }}>
+
+        <ScrollView>
+
+
+
+
+
+<View>
+<View style={styles.card}>
+ <Text style={styles.text}>Hospital name</Text>
+<TextInput 
+style={styles.input} 
+onChangeText={setHospital}
+value={hospital}
+/>
+
+ <Text style={styles.text}>Doctors name (optional)</Text>
+<TextInput 
+style={styles.input}
+onChangeText={setDoctorName}
+value={doctorName}
+ />
+</View>   
+
+<View style={styles.card}>
+<Text style={styles.text}>Brief notes about your visit</Text>
+<TextInput 
+editable
+multiline
+numberOfLines={8}
+maxLength={40}
+style={styles.input} 
+onChangeText={setNotes}
+value={Notes}
+/>
+
+</View>
+
+<View style={styles.card}>
+  <View style={styles. pressableH}>
+  <Text style={styles.textHeader}>Enter date</Text>
+  </View>
+
+      <TouchableOpacity style={{backgroundColor:"#ADD8E6", marginHorizontal:25, paddingHorizontal:30,paddingVertical:10, borderRadius:18}} onPress={() => showModeAD("date")} >
+      <Text>Pick Day</Text>
+      </TouchableOpacity>
+
+      <View style={{flexDirection:"row"}}>
+
+      <TouchableOpacity style={{backgroundColor:"#ADD8E6", marginHorizontal:25, paddingHorizontal:30,paddingVertical:10, borderRadius:18}} onPress={() => showModeAT("time")} >
+      <Text>Pick Start time</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={{backgroundColor:"#ADD8E6", marginHorizontal:25, paddingHorizontal:30,paddingVertical:10, borderRadius:18}} onPress={() => showEModeAT("time")} >
+      <Text>Pick End time</Text>
+      </TouchableOpacity>
+
+      </View>
+
+<Text style={styles.selectedTime}>Selected Time: {date.toLocaleString()}</Text>
+
+{
+    showAD && (
+        <DateTimePicker
+        value={date}
+        mode={mode} 
+        is24Hour={true}
+        onChange={onChangeAD}
+
+        
         />
-        </View>
-
-        <View style={styles.card}>
-         <Text style={styles.text}>Doctors name (optional)</Text>
-        <TextInput 
-        style={styles.input}
-        onChangeText={setDoctorName}
-        value={doctorName}
-         />
-        </View>   
-
-        <View style={styles.card}>
-        <Text style={styles.text}>Enter date</Text>
-        <TextInput 
-        onPressIn={() => showModeAD("date")}
-        style={styles.input} 
-        
-        />      
-        {
-            showAD && (
-                <DateTimePicker
-                value={date}
-                mode={mode} 
-                is24Hour={true}
-                onChange={onChangeAD}
-
-                
-                />
-            )
-        }
-        </View> 
-        <View style={styles.card}>
-        <Text style={styles.text}>Enter time</Text>
-        <TextInput 
-        onPressIn={() => showModeAT("time")}
-        style={styles.input} 
-        value={dateValue}/>        
-        {
-            showAT && (
-                <DateTimePicker
-                value={date}
-                mode={mode} 
-                is24Hour={true}
-                onChange={onChangeAT}
-
-                
-                />
-            )
-        }
-        </View>         
-
-        <Pressable style={styles.pressableS} onPress={() => onAppointSave()}>
-        <Text style={styles.textHeader}>SAVE</Text>
-        </Pressable>          
-        
-        </View>            
+    )
+}
 
 
+<Text style={styles.selectedTime}>Selected Time: {dateValue.toLocaleString()}</Text>
+{
+    showAT && (
+        <DateTimePicker
+        value={dateValue}
+        mode={Emode} 
+        is24Hour={true}
+        onChange={onChangeAT}       
+        />
+    )
+}
 
-        </ScrollView>
+{
+    EshowAT && (
+        <DateTimePicker
+        value={dateValue}
+        mode={Emode} 
+        is24Hour={true}
+        onChange={onEChangeAT}       
+        />
+    )
+}
+</View>         
 
-      {/* Use a light status bar on iOS to account for the black space above the modal */}
+</View>            
+</ScrollView>
+<Pressable style={styles.pressableS} onPress={() => onAppointSave()}>
+<Text style={styles.textHeader}>SAVE</Text>
+</Pressable>          
+
+</Modal>
+
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
     </View>
   );
@@ -255,8 +368,16 @@ async function registerForPushNotificationsAsync() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor:"beige"
+    backgroundColor:'#F8F8F8'
 
+  },
+  button: {
+    backgroundColor: "blue", // Green background color
+    borderRadius: 20, // Rounded corners
+    padding: 15,
+    margin: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   title: {
     fontSize: 20,
@@ -327,7 +448,16 @@ const styles = StyleSheet.create({
           letterSpacing: 0.25,
           color:"white",
           fontFamily:"sans-serif-condensed"
-        },  
+        }, 
+        textA: {
+          fontSize: 16,
+          lineHeight: 21,
+          fontWeight: 'bold',
+          marginHorizontal: 12,
+          letterSpacing: 0.25,
+          color:"black",
+          fontFamily:"sans-serif-condensed"
+        }, 
           text: {
           fontSize: 16,
           lineHeight: 21,
@@ -365,13 +495,25 @@ const styles = StyleSheet.create({
         elevation: 1,
     
     },
+    pressableA: {
+      alignItems:"center",
+      justifyContent:"flex-end",
+      backgroundColor:"green",
+      paddingVertical: 12,
+      paddingHorizontal: 2,
+      // marginHorizontal:19,
+      marginBottom: 10,
+      borderRadius: 15,
+      elevation: 1,
+  
+  },
             pressableH: {
         alignItems:"center",
         justifyContent:"flex-end",
         backgroundColor:"#353839",
         paddingVertical: 12,
         paddingHorizontal: 2,
-        marginHorizontal:19,
+        // marginHorizontal:19,
         marginVertical:10,
         borderRadius: 15,
         elevation: 1,

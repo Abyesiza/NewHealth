@@ -277,7 +277,7 @@ async function registerForPushNotificationsAsync() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor:"beige"
+    backgroundColor: '#F8F8F8'
 
   },
   title: {
