@@ -34,8 +34,9 @@ export default function BpScreen() {
     const screenWidth = Dimensions.get("window").width;
     const [gdata, setGData] = useState([0])
     const [glabel, setGLabel] = useState([""])
-    const [outCome, setOutCome] = useState("")
-     const [expoPushToken, setExpoPushToken] = useState('');
+    const [outCome, setOutCome] = useState("First Enter your Blood Pressure values to see your diagnosis")
+    const [Recomed,setRecomend] = useState("We shall provide you recommendations depending on the diagnosis")
+    const [expoPushToken, setExpoPushToken] = useState('');
 
      useEffect(()=>{
   //  console.log("registering for push token")
@@ -54,15 +55,23 @@ export default function BpScreen() {
     else if(sysValue<121 & diaValue<81) {
               await schedulePushNotificationN();
       setOutCome("Normal Blood pressure")
+      setRecomend("Maintain a healthy lifestyle, including a balanced diet and regular exercise.Limit alcohol intake and avoid smoking.Manage stress through relaxation techniques and adequate sleep.")
     } else if(sysValue<130 & diaValue<81) {
       await schedulePushNotificationNN();
       setOutCome("Elevated blood pressure")
+      setRecomend("Adopt a healthier diet, focusing on fruits, vegetables, whole grains, and low-fat dairy.Increase physical activity, aiming for at least 150 minutes of moderate-intensity exercise per week.Reduce sodium intake to less than 2,300 mg per day, with an ideal limit of 1,500 mg per day for most adults. Maintain a healthy weight. Monitor blood pressure regularly.")
     } else if(sysValue<140 & diaValue<90) {
       await schedulePushNotificationNH();
       setOutCome("Hypertension stage 1")
-    } else if(sysValue>139 & diaValue>89) {
-      await schedulePushNotificationNH();
+      setRecomend("Lifestyle modifications as mentioned above (healthy diet, exercise, sodium reduction). Possibly start medication if there are other cardiovascular risk factors (discuss with a healthcare provider). Regular monitoring of blood pressure. Work with a healthcare provider to manage other conditions such as diabetes or high cholesterol.")
+    } else if(sysValue<180 & diaValue<120) {
+      await schedulePushNotificationNtwo();
       setOutCome("Hypertension stage 2")
+      setRecomend("Stronger emphasis on lifestyle changes (diet, exercise, weight management). Likely need for medication to help lower blood pressure. Regular follow-ups with a healthcare provider to monitor and adjust treatment as necessary. Consider consultation with a specialist if blood pressure is difficult to control.")
+    } else if(sysValue>179 & diaValue>120) {
+      await schedulePushNotificationNHigh();
+      setOutCome("Hypertensive Crisis (Emergency care needed)")
+      setRecomend(" Seek immediate medical attention. This is a medical emergency. Do not wait for symptoms to appear. If you experience severe headaches, chest pain, shortness of breath, or visual changes, call emergency services immediately.")
     }
 
     else {
@@ -103,6 +112,8 @@ const chartConfig = {
     <View style={styles.container}>
     <ScrollView>
 
+
+
 <View style={{justifyContent:"space-evenly"}}>
         {/* <Text style={styles.text}
                     lightColor="rgba(0,0,0,0.8)"
@@ -110,7 +121,19 @@ const chartConfig = {
         >
         Line graph showing the daily Glucose level
         </Text> */}
-  <View>
+
+    <View style={{
+        elevation: 3,
+        padding:20,
+        borderRadius:25,
+        marginHorizontal: 9,
+        marginBottom: 9,
+        backgroundColor: 'white',
+        shadowColor: 'green', // Shadow color
+        // shadowOffset: { width: 4, height: 4 }, // Shadow offset (x, y)
+        shadowOpacity: 3, // Shadow opacity
+        shadowRadius: 3, // Shadow radius
+            }}>
      <LineChart
   data={data}
   width={screenWidth}
@@ -203,9 +226,58 @@ const chartConfig = {
         </Pressable>
 
       </View>
-      <View style={{backgroundColor:"white", padding:20, elevation:1, borderRadius:10, margin:10}}>
+      <View style={{
+        elevation: 3,
+        padding:20,
+        borderRadius:25,
+        marginHorizontal: 9,
+        marginBottom: 9,
+        backgroundColor: 'white',
+        shadowColor: 'white', // Shadow color
+
+        // shadowOffset: { width: 4, height: 4 }, // Shadow offset (x, y)
+        shadowOpacity: 3, // Shadow opacity
+        shadowRadius: 3, // Shadow radius
+            }}>
       <Text style={styles.text}>
       {outCome}
+      </Text>
+      </View>
+      <View style={{
+        elevation: 3,
+        padding:20,
+        borderRadius:25,
+        marginHorizontal: 9,
+        marginBottom: 9,
+        backgroundColor: 'white',
+        shadowColor: 'white', // Shadow color
+
+        // shadowOffset: { width: 4, height: 4 }, // Shadow offset (x, y)
+        shadowOpacity: 3, // Shadow opacity
+        shadowRadius: 3, // Shadow radius
+            }}>
+<View style = {{       
+        alignItems:"center",
+        justifyContent:"flex-end",
+        paddingVertical: 7,
+        paddingHorizontal: 2,
+        backgroundColor:"lightblue",
+        borderRadius:25,
+    }}>
+<Text style= {{
+          fontSize: 17,
+          lineHeight: 19,
+          fontWeight: 'bold',
+          letterSpacing: 0.1,
+        //   color:"black",
+          fontFamily:"sans-serif-condensed",}}
+ >
+        Recommendations
+      </Text>
+</View>
+
+      <Text style={styles.text}>
+      {Recomed}
       </Text>
       </View>
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
@@ -223,7 +295,7 @@ async function schedulePushNotificationNN() {
     trigger: { seconds: 1 },
   });
 }
-async function schedulePushNotificationH() {
+async function schedulePushNotificationNtwo() {
   await Notifications.scheduleNotificationAsync({
     content: {
       title: "Hypertension stage 2",
@@ -258,6 +330,16 @@ async function schedulePushNotificationL() {
     content: {
       title: "Hypotension",
       body: "You have normal blood sugar levels",
+      data: { data: 'goes here' },
+    },
+    trigger: { seconds: 1 },
+  });
+}
+async function schedulePushNotificationNHigh() {
+  await Notifications.scheduleNotificationAsync({
+    content: {
+      title: "Hypertensive Crisis",
+      body: "Emergency care needed",
       data: { data: 'goes here' },
     },
     trigger: { seconds: 1 },

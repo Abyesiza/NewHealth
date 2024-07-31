@@ -16,14 +16,24 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCalendarsUsageDescription": "The app needs to access your calendar.",
+        "NSRemindersUsageDescription": "Allow $(PRODUCT_NAME) to access your reminders",
+        "NSCalendarsFullAccessUsageDescription": "The app needs to access your calendar.",
+        "NSRemindersFullAccessUsageDescription": "Allow $(PRODUCT_NAME) to access your reminders"
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.joelaby.NewHealth"
+      "package": "com.joelaby.NewHealth",
+      "permissions": [
+        "android.permission.READ_CALENDAR",
+        "android.permission.WRITE_CALENDAR"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -32,12 +42,13 @@
     },
     "plugins": [
       "expo-router",
-            [
+      [
         "expo-calendar",
         {
           "calendarPermission": "The app needs to access your calendar."
         }
-      ]
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true
@@ -49,6 +60,7 @@
       "eas": {
         "projectId": "d167ad45-6800-4721-8c2f-976688f1fd7c"
       }
-    }
+    },
+    "owner": "joelaby"
   }
 }
