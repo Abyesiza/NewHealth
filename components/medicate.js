@@ -15,12 +15,8 @@ export default function MReminder() {
     <Pressable >
 
             <View style={styles.card}
-                // darkColor="black"
-                darkColor="#353935"
-                lightColor="white"            
+          
             >
-            {/* <ImageBackground source={require("../assets/images/glu.jpg")}   style={styles.image}> */}
-
 
                 <View 
                 style={{margin:1, 
@@ -31,12 +27,10 @@ export default function MReminder() {
                 paddingHorizontal: 0,
                 borderRadius: 10,
                 backgroundColor:"white"}}
-                // darkColor="#353935"
-                // lightColor="#F8F8FF"                
+
                 >
-                <Text style={styles.text}
-                    lightColor="rgba(0,0,0,0.8)"
-                    darkColor="rgba(255,255,255,0.8)"                 
+                <Text style={styles.textT}
+             
                 >Medication Reminders </Text>
 
                 </View>
@@ -44,14 +38,11 @@ export default function MReminder() {
         {/* <  Pressable style={styles.pressable} > */}
             <View style={{flexDirection:"row", justifyContent:"space-between", backgroundColor:"white"}}> 
         <View style={styles.pressable} 
-            lightColor="#fffafa"
-            darkColor= "#36454F"  >
+
+             >
             <Text 
             style={styles.text}
-            // lightColor="rgba(255,255,255,0.8)"
-            lightColor="rgba(0,0,0,0.8)"
-            darkColor="rgba(255,255,255,0.8)"   
-            // darkColor="rgba(0,0,0,0.8)"            
+          
             >Schedule</Text>
         </View>
                                                   <FontAwesome
@@ -61,32 +52,11 @@ export default function MReminder() {
                     // style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
                   />
 
-            {/* </Pressable> */}
-        {/* </ImageBackground> */}
             </View>
             </View>
         
     </Pressable>
-      {/* <View style={styles.getStartedContainer}>
 
-
-        <Text
-          style={styles.getStartedText}
-          lightColor="rgba(0,0,0,0.8)"
-          darkColor="rgba(255,255,255,0.8)">
-          Change any of the text, save the file, and your app will automatically update.
-        </Text>
-      </View>
-
-      <View style={styles.helpContainer}>
-        <ExternalLink
-          style={styles.helpLink}
-          href="https://docs.expo.io/get-started/create-a-new-app/#opening-the-app-on-your-phonetablet">
-          <Text style={styles.helpLinkText} lightColor={Colors.light.tint}>
-            Tap here if your app doesn't automatically update after making changes
-          </Text>
-        </ExternalLink>
-      </View> */}
       </Link>
     </View>
   );
@@ -98,9 +68,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 50,
   },
          card:{
-        // backgroundColor:"#36454F",
-        // backgroundColor:"#F8F8FF",
-        // backgroundColor:"#F8F8FF",
+
         elevation: 3,
         padding:20,
         borderRadius:25,
@@ -126,6 +94,14 @@ const styles = StyleSheet.create({
           
           // backgroundColor: 'ne',
         },
+        textT: {
+          fontSize: 20,
+          lineHeight: 19,
+          fontWeight: 'bold',
+          letterSpacing: 0.1,
+        //   color:"black",
+          fontFamily:"sans-serif-condensed",
+        }, 
           text: {
           fontSize: 17,
           lineHeight: 19,

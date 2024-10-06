@@ -7,8 +7,32 @@ import { Text, View } from './Themed';
 
 import Colors from '@/constants/Colors';
 import { router , Link} from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useState, useEffect , useRef} from "react";
 
-export default function BP() {
+export default function BP(props) {
+  const [blevel, setBLevel] = useState()
+const [blabel, setBLabel] = useState()
+  useEffect(()=>{
+
+    async function fetchData() {
+      try {
+        const value = await AsyncStorage.getItem('my-bp');
+        const label = await AsyncStorage.getItem('my-blabels');    
+        if (value !== null & label !== null) {
+          // value previously stored
+        setBLevel(value)   
+        setBLabel(label)       
+        }
+      } catch (e) {
+        // error reading value
+        console.log(e)
+      }
+    }
+    fetchData()
+
+      },[])
+
   return (
     <View>
         <Link href="/bpScreen" asChild>
@@ -32,61 +56,32 @@ export default function BP() {
                 paddingHorizontal: 0,
                 borderRadius: 10,
                 backgroundColor:"white"}}
-                // darkColor="#353935"
-                // lightColor="#F8F8FF" 
+
                 >
-                <Text style={styles.text}
-                    lightColor="rgba(0,0,0,0.8)"
-                    darkColor="rgba(255,255,255,0.8)"                 
+                <Text style={styles.textT}
+               
                 >Blood pressure Level </Text>
 
                 </View>
             <View style={{flexDirection:"row", justifyContent:"space-between", backgroundColor:"white"}}> 
+
+                            <View style={{flexDirection:"row", justifyContent:"center", alignSelf:"center",
+               backgroundColor: "beige", padding:10, borderRadius:10
+               }}>
+                <Text style={styles.text}>It was mmHg {blevel} at {blabel} hours</Text>
+              </View>
         <View style={styles.pressable} 
-            //  lightColor="rgba(0,0,0,0.8)"
-            lightColor='#fffafa'
-            darkColor= "#36454F"  >
+
+             >
             <Text 
             style={styles.text}
-            // lightColor="rgba(255,255,255,0.8)"
-            lightColor="rgba(0,0,0,0.8)"
-            darkColor="rgba(255,255,255,0.8)"   
-            // darkColor="rgba(0,0,0,0.8)"            
+          
             >Enter</Text>
         </View>
-                                                  {/* <FontAwesome
-                    name="bell"
-                    size={30}
-                    color={"blue"}
-                    // style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  /> */}
-        {/* <  Pressable style={styles.pressable} > */}
-
-            {/* </Pressable> */}
-        {/* </ImageBackground> */}
             </View>
         </View>
     </Pressable>
-      {/* <View style={styles.getStartedContainer}>
 
-
-        <Text
-          style={styles.getStartedText}
-          lightColor="rgba(0,0,0,0.8)"
-          darkColor="rgba(255,255,255,0.8)">
-          Change any of the text, save the file, and your app will automatically update.
-        </Text>
-      </View>
-
-      <View style={styles.helpContainer}>
-        <ExternalLink
-          style={styles.helpLink}
-          href="https://docs.expo.io/get-started/create-a-new-app/#opening-the-app-on-your-phonetablet">
-          <Text style={styles.helpLinkText} lightColor={Colors.light.tint}>
-            Tap here if your app doesn't automatically update after making changes
-          </Text>
-        </ExternalLink>
-      </View> */}
       </Link>
     </View>
   );
@@ -98,9 +93,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 50,
   },
          card:{
-        // backgroundColor:"#36454F",
-        // backgroundColor:"#F8F8FF",
-        // backgroundColor:"#F8F8FF",
         elevation: 3,
         padding:20,
         borderRadius:25,
@@ -108,12 +100,8 @@ const styles = StyleSheet.create({
         marginBottom: 9,
         backgroundColor: 'white',
         shadowColor: 'white', // Shadow color
-
-        // shadowOffset: { width: 4, height: 4 }, // Shadow offset (x, y)
         shadowOpacity: 3, // Shadow opacity
         shadowRadius: 3, // Shadow radius
-        
-        // box-shadow: 2px 3px 3px 3px rgba(26, 12, 12, 0.1), 
         },
         button:{
           alignItems: 'center',
@@ -126,6 +114,14 @@ const styles = StyleSheet.create({
           
           // backgroundColor: 'ne',
         },
+        textT: {
+          fontSize: 20,
+          lineHeight: 19,
+          fontWeight: 'bold',
+          letterSpacing: 0.1,
+        //   color:"black",
+          fontFamily:"sans-serif-condensed",
+        }, 
           text: {
           fontSize: 17,
           lineHeight: 19,

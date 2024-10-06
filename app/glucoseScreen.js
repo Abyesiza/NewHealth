@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { Platform, Pressable, ScrollView, StyleSheet } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
 import { Dimensions, TextInput } from "react-native";
@@ -8,6 +8,7 @@ import { useState, useEffect , useRef} from "react";
 
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -26,14 +27,18 @@ import {
   StackedBarChart
 } from "react-native-chart-kit";
 
+
 export default function GlucoseScreen() {
 
     const [glucoseValue, setGlucoseValue] = useState(""); // Use state for glucose value
     const screenWidth = Dimensions.get("window").width;
     const [gdata, setGData] = useState([0])
     const [glabel, setGLabel] = useState([""])
-    const [outCome, setOutCome] = useState("")
+
      const [expoPushToken, setExpoPushToken] = useState('');
+     const [outCome, setOutCome] = useState("First Enter your Glucose level to see your diagnosis")
+     const [Recomed,setRecomend] = useState("We shall provide you recommendations depending on the diagnosis")
+
 
      useEffect(()=>{
 
@@ -65,12 +70,15 @@ fetchData()
     if (glucoseValue<70) {
               await schedulePushNotificationL();
       setOutCome("You have low blood sugar levels, We advise you to eat or drink something with simple sugars.")
+      setRecomend("For example 1/2 cup (120 ml) of juice or regular soda. 3-4 glucose tablets. 1 tablespoon of honey or sugar. 5-6 pieces of hard candy (like Lifesavers).")
     } else if(glucoseValue>180) {
       await schedulePushNotificationH();
       setOutCome("You have high high blood sugar levels, we advise you to take insulin, drink water,and exercise")
+      setRecomend("Drink water: Helps your body flush excess sugar through urine and prevents dehydration.Physical activity: Light exercise, like walking, can help lower blood sugar (avoid exercising if blood sugar is above 250 mg/dL and you have ketones present). Adjust food intake: Avoid sugary foods, refined carbs, and large meals until blood sugar normalizes. Follow your treatment plan: If you're on insulin or oral medications, you may need to adjust your dose (consult your doctor for specific instructions). Monitor your blood sugar frequently to track changes.")
     } else {
       await schedulePushNotificationN();
       setOutCome("You have normal blood sugar levels")
+      setRecomend("Maintain a balanced diet: Focus on a mix of carbohydrates, proteins, and healthy fats. Regular physical activity: Helps maintain normal blood sugar levels. Monitor regularly: Even if your levels are normal, checking regularly helps prevent fluctuations. Stay hydrated: Drink plenty of water to assist in blood sugar regulation. Sleep well: Aim for 7-9 hours of sleep, as poor sleep can affect blood sugar control")
     }
 
     setGData([...gdata,glucoseValue])
@@ -85,12 +93,14 @@ fetchData()
 // };
     setGlucoseValue("")
   }
-
+  const recentData = gdata.slice(-4);
+  const recentLabel = glabel.slice(-4);
     const data = {
-  labels: glabel,
+  labels: recentLabel,
   datasets: [
     {
-      data: gdata,
+
+      data: recentData,
       color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
       strokeWidth: 2 // optional
     }
@@ -120,7 +130,18 @@ const chartConfig = {
         >
         Line graph showing the daily Glucose level
         </Text> */}
-  <View>
+  <View style={{
+        elevation: 3,
+        padding:20,
+        borderRadius:25,
+        marginHorizontal: 9,
+        marginBottom: 9,
+        backgroundColor: 'white',
+        shadowColor: 'green', // Shadow color
+        // shadowOffset: { width: 4, height: 4 }, // Shadow offset (x, y)
+        shadowOpacity: 3, // Shadow opacity
+        shadowRadius: 3, // Shadow radius
+            }}>
      <LineChart
   data={data}
   width={screenWidth}
@@ -184,9 +205,58 @@ const chartConfig = {
         </Pressable>
 
       </View>
-      <View style={{backgroundColor:"white", padding:20, elevation:1, borderRadius:10, margin:10}}>
+      <View style={{
+        elevation: 3,
+        padding:20,
+        borderRadius:25,
+        marginHorizontal: 9,
+        marginBottom: 9,
+        backgroundColor: 'white',
+        shadowColor: 'white', // Shadow color
+
+        // shadowOffset: { width: 4, height: 4 }, // Shadow offset (x, y)
+        shadowOpacity: 3, // Shadow opacity
+        shadowRadius: 3, // Shadow radius
+            }}>
       <Text style={styles.text}>
       {outCome}
+      </Text>
+      </View>
+      <View style={{
+        elevation: 3,
+        padding:20,
+        borderRadius:25,
+        marginHorizontal: 9,
+        marginBottom: 9,
+        backgroundColor: 'white',
+        shadowColor: 'white', // Shadow color
+
+        // shadowOffset: { width: 4, height: 4 }, // Shadow offset (x, y)
+        shadowOpacity: 3, // Shadow opacity
+        shadowRadius: 3, // Shadow radius
+            }}>
+<View style = {{       
+        alignItems:"center",
+        justifyContent:"flex-end",
+        paddingVertical: 7,
+        paddingHorizontal: 2,
+        backgroundColor:"lightblue",
+        borderRadius:25,
+    }}>
+<Text style= {{
+          fontSize: 17,
+          lineHeight: 19,
+          fontWeight: 'bold',
+          letterSpacing: 0.1,
+        //   color:"black",
+          fontFamily:"sans-serif-condensed",}}
+ >
+        Recommendations
+      </Text>
+</View>
+
+      <Text style={styles.text}>
+      {Recomed}
       </Text>
       </View>
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />

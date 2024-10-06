@@ -4,10 +4,12 @@ import { Platform, Pressable, ScrollView, StyleSheet } from 'react-native';
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
 import { Dimensions, TextInput } from "react-native";
-import { useState, useEffect , useRef} from "react";
+import { useState, useEffect } from "react";
 
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -26,6 +28,9 @@ import {
   StackedBarChart
 } from "react-native-chart-kit";
 
+
+
+
 export default function BpScreen() {
 
     // const [glucoseValue, setGlucoseValue] = useState(""); // Use state for glucose value
@@ -39,6 +44,21 @@ export default function BpScreen() {
     const [expoPushToken, setExpoPushToken] = useState('');
 
      useEffect(()=>{
+      async function fetchData() {
+        try {
+          const value = await AsyncStorage.getItem('my-bp');
+          const label = await AsyncStorage.getItem('my-blabels');    
+          if (value !== null & label !== null) {
+            // value previously stored
+          setGData([...gdata,value])   
+          setGLabel([...glabel,label])       
+          }
+        } catch (e) {
+          // error reading value
+          console.log(e)
+        }
+      }
+      fetchData()
   //  console.log("registering for push token")
     registerForPushNotificationsAsync().then(token => {
       // console.log(token)
@@ -80,16 +100,21 @@ export default function BpScreen() {
     }
     setGData([...gdata,sysValue])
     setGLabel([...glabel,dDate])
+
+    await AsyncStorage.setItem('my-bp', sysValue);
+    await AsyncStorage.setItem('my-blabels', dDate);
+
     setDiaValue("")
     setSysValue("")
 
   }
-
+  const recentLabel = glabel.slice(-4);
+  const recentData = gdata.slice(-4);
     const data = {
-  labels: glabel,
+  labels: recentLabel,
   datasets: [
     {
-      data: gdata,
+      data: recentData,
       color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
       strokeWidth: 2 // optional
     }
@@ -109,10 +134,10 @@ const chartConfig = {
 };
 
   return (
+
     <View style={styles.container}>
+
     <ScrollView>
-
-
 
 <View style={{justifyContent:"space-evenly"}}>
         {/* <Text style={styles.text}
@@ -283,6 +308,7 @@ const chartConfig = {
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
       </ScrollView>
     </View>
+
   );
 }
 async function schedulePushNotificationNN() {

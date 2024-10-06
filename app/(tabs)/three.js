@@ -1,10 +1,84 @@
-import { StyleSheet,ScrollView , Text, View} from "react-native";
+import { Dimensions, Text, View ,Image, ImageBackground, StyleSheet,ScrollView} from 'react-native';
 import EditScreenInfo from '@/components/EditScreenInfo';
 // import { Text, View } from '@/components/Themed';
+import Carousel from 'react-native-reanimated-carousel';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+
+import { useState, useEffect } from "react";
+import axios from 'axios';
+
 
 export default function infoScreen() {
+
+  const width = Dimensions.get('window').width;
+
+  const data = [
+    { id: '1', content: 'Emergency' , uri: 'https://images.app.goo.gl/6YTr6xwdfJJcUdby7', source: require("../assets/1.jpg") },
+    { id: '2', content: 'Updates on Diabetes', uri: 'https://example.com/image2.jpg', source: require("../assets/2.jpg")  },
+    { id: '3', content: 'News' , uri: 'https://example.com/image3.jpg' , source: require("../assets/3.jpg") },
+  ];
+  useEffect(() => {
+    // Fetch news data from the WHO API
+    const fetchNews = async () => {
+      try {
+        // const response = await axios.get('https://who.int/api/news/blogposts'); 
+        // const response = await axios.get('https://who.int/api/news/newsitems');  
+        const response = await axios.get('https://api.fda.gov/drug/event.json?limit=1');     
+        // Replace with the actual WHO API endpoint
+        const useD = response.data
+        console.log(useD.results[0].safetyreportid)
+
+      } catch (err) {
+        console.error(err);
+      }
+    };
+  
+    fetchNews();
+  }, []);
+
   return (
+    <SafeAreaProvider>
     <View style={styles.container}>
+      <View style={{  height:"28%"}}>
+    <Carousel
+                loop
+                width={width}
+                height={width / 2}
+                autoPlay={true}
+                data={data}
+                scrollAnimationDuration={3000}
+                // onSnapToItem={(index) => console.log('current index:', index)}
+                renderItem={({ item }) => (
+                    <View
+                        style={{
+                            flex: 1,
+                        }}
+                    >
+
+        <ImageBackground
+            source={item.source}
+            style={{
+              // width: width - 40, // Add some padding or fit screen
+              height: 200, // Adjust this to match the image aspect ratio
+              borderRadius: 20, // Optional styling for rounded corners
+              justifyContent:"center" , 
+              alignItems:"center",
+              marginHorizontal:5,
+
+            }}
+          >   
+
+          <Text style={{ textAlign: 'center', fontSize: 30, color:"white" }}>
+                         {item.content}
+                        </Text>
+
+
+          </ImageBackground>
+
+                    </View>
+                )}
+            />
+     </View>
     <ScrollView>
 
     <View style={styles.pressableH}>
@@ -113,6 +187,7 @@ These medicines can include insulin or the following:
  </View>
  </ScrollView>
     </View>
+    </SafeAreaProvider>
   );
 }
 
@@ -120,6 +195,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor:'#F8F8F8'
+      // backgroundColor:'#505050'
 
   },
         input: {
@@ -141,6 +217,7 @@ const styles = StyleSheet.create({
 
        card:{
         backgroundColor:"white",
+            // backgroundColor:'#e0e0e0',
         padding:20,
         borderRadius:20,
         marginHorizontal: 15,

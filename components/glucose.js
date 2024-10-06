@@ -7,18 +7,41 @@ import { Text, View } from './Themed';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Colors from '@/constants/Colors';
 import { router , Link} from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useState, useEffect , useRef} from "react";
 
 export default function Glucose() {
+const [glevel, setGLevel] = useState()
+const [glabel, setGLabel] = useState()
+  useEffect(()=>{
+
+    async function fetchData() {
+      try {
+        const value = await AsyncStorage.getItem('my-glucose');
+        const label = await AsyncStorage.getItem('my-glabels');    
+        if (value !== null & label !== null) {
+          // value previously stored
+        setGLevel(value)   
+        setGLabel(label)       
+        }
+      } catch (e) {
+        // error reading value
+        console.log(e)
+      }
+    }
+    fetchData()
+    
+      // //  console.log("registering for push token")
+      //   registerForPushNotificationsAsync().then(token => {
+      //     // console.log(token)
+      //     setExpoPushToken(token)}).catch((error) => {console.log(error)});
+      },[])
   return (
     <View>
         <Link href="/glucoseScreen" asChild>
     <Pressable >
 
-            <View style={styles.card}
-                // darkColor="black"
-                darkColor="#353935"
-                lightColor="white"            
-            >
+            <View style={styles.card} >
             {/* <ImageBackground source={require("../assets/images/glu.jpg")}   style={styles.image}> */}
             {/* <View style={{flexDirection:"row", borderRadius: 10, marginBottom:10}}> */}
 
@@ -32,58 +55,30 @@ export default function Glucose() {
                 // darkColor="#353935"
                 // lightColor="#F8F8FF"                  
                 >
-                <Text style={styles.text}
-                    lightColor="rgba(0,0,0,0.8)"
-                    darkColor="rgba(255,255,255,0.8)"                 
-                >Glucose Level </Text>
+  
+                <Text style={styles.textT}>Glucose Level</Text>
                 </View>
             {/* </View>  */}
-            <View style={{flexDirection:"row", justifyContent:"space-between", backgroundColor: "white"}}> 
-                    <View style={styles.pressable} 
-            lightColor="#fffafa"
-            darkColor= "#36454F"  >
-            <Text 
-            style={styles.text}
-            // lightColor="rgba(255,255,255,0.8)"
-            lightColor="rgba(0,0,0,0.8)"
-            darkColor="rgba(255,255,255,0.8)"   
-            // darkColor="rgba(0,0,0,0.8)"            
-            >Enter</Text>
-        </View>
-                                                  <FontAwesome
-                    name="heart"
-                    size={30}
-                    color={"#eaff7b"}
-                    // style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-        {/* <  Pressable style={styles.pressable} > */}
+            <View style={{flexDirection:"row", justifyContent:"space-between",
+               backgroundColor: "white"
+               }}> 
 
-            {/* </Pressable> */}
-        {/* </ImageBackground> */}
+
+              <View style={{flexDirection:"row", justifyContent:"center", alignSelf:"center",
+               backgroundColor: "beige", padding:10, borderRadius:10
+               }}>
+                <Text style={styles.text}>It was mg/dl {glevel} at {glabel} hours</Text>
+              </View>
+              <View style={styles.pressable}  >
+            <Text 
+            style={styles.text}>Enter </Text>
+        </View>
+
             </View>
             </View>
         
     </Pressable>
-      {/* <View style={styles.getStartedContainer}>
 
-
-        <Text
-          style={styles.getStartedText}
-          lightColor="rgba(0,0,0,0.8)"
-          darkColor="rgba(255,255,255,0.8)">
-          Change any of the text, save the file, and your app will automatically update.
-        </Text>
-      </View>
-
-      <View style={styles.helpContainer}>
-        <ExternalLink
-          style={styles.helpLink}
-          href="https://docs.expo.io/get-started/create-a-new-app/#opening-the-app-on-your-phonetablet">
-          <Text style={styles.helpLinkText} lightColor={Colors.light.tint}>
-            Tap here if your app doesn't automatically update after making changes
-          </Text>
-        </ExternalLink>
-      </View> */}
       </Link>
     </View>
   );
@@ -95,9 +90,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 50,
   },
          card:{
-        // backgroundColor:"#36454F",
-        // backgroundColor:"#F8F8FF",
-        // backgroundColor:"#F8F8FF",
         elevation: 3,
         padding:20,
         borderRadius:25,
@@ -125,6 +117,14 @@ const styles = StyleSheet.create({
         },
           text: {
           fontSize: 17,
+          lineHeight: 19,
+          fontWeight: 'bold',
+          letterSpacing: 0.1,
+        //   color:"black",
+          fontFamily:"sans-serif-condensed",
+        }, 
+        textT: {
+          fontSize: 20,
           lineHeight: 19,
           fontWeight: 'bold',
           letterSpacing: 0.1,
